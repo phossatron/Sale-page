@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="56" viewBox="0 0 220 56">
+  <rect width="220" height="56" fill="none"/>
+  <g transform="translate(6,8)">
+    <path d="M14 2h12v10l10 22a8 8 0 0 1-7 12H11a8 8 0 0 1-7-12l10-22V2z" fill="none" stroke="#F26522" stroke-width="3"/>
+    <path d="M8 26h24" stroke="#F26522" stroke-width="3"/>
+    <circle cx="16" cy="33" r="2.5" fill="#F26522"/><circle cx="25" cy="37" r="2" fill="#FFA35C"/>
+  </g>
+  <text x="52" y="30" font-family="Georgia,serif" font-size="26" font-weight="700" fill="#1F2937">Bey<tspan fill="#F26522">o</tspan>nd</text>
+  <text x="52" y="46" font-family="Helvetica,Arial" font-size="12" letter-spacing="6" fill="#F26522">LAB</text>
+</svg>

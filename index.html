@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beyond Lab — Contract Manufacturer for Supplements, Skincare &amp; Cosmetics</title>
+<meta name="description" content="Beyond Lab is a full-service contract manufacturer for dietary supplements, skincare and cosmetics. GMP / ISO / HACCP certified, minimum orders from 1,000 units. Free consultation.">
+<link rel="icon" href="assets/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+
+<!-- All page content is rendered from js/content.js -->
+<main id="app"></main>
+
+<!-- แถบเครื่องมือแก้ไข -->
+<div id="toolbar" class="toolbar">
+  <button id="tb-toggle" class="tb-toggle" title="ย่อ/ขยายแถบเครื่องมือ">⚙</button>
+  <div class="tb-body">
+    <button id="btn-edit" class="tb-btn main">✏️ โหมดแก้ไข</button>
+    <button id="btn-preview" class="tb-btn">👁 มุมมองผู้เข้าชม</button>
+    <button id="btn-save" class="tb-btn">💾 บันทึก</button>
+    <button id="btn-code" class="tb-btn">📦 สร้างไฟล์ content.js</button>
+    <button id="btn-export" class="tb-btn">⬇️ ส่งออก JSON</button>
+    <button id="btn-import" class="tb-btn">⬆️ นำเข้า JSON</button>
+    <button id="btn-reset" class="tb-btn danger">↺ คืนค่าเริ่มต้น</button>
+    <input id="file-import" type="file" accept="application/json" hidden>
+  </div>
+</div>
+
+<div id="preview" class="preview"></div>
+<div id="modal" class="modal"></div>
+<div id="toast" class="toast"></div>
+
+<script src="js/content.js?v=4"></script>
+<script src="js/icons.js?v=4"></script>
+<script src="js/render.js?v=4"></script>
+<script src="js/editor.js?v=4"></script>
+</body>
+</html>
