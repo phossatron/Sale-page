@@ -20,18 +20,18 @@ repo ถูกเตรียมและ commit ไว้ให้แล้ว 
 ## ขั้นที่ 1 — สร้าง repo บน GitHub
 
 เปิด https://github.com/new แล้ว:
-- **Repository name**: `beyondlab-landing` (หรือชื่ออื่นที่ต้องการ)
+- **Repository name**: `Sale-page`
 - **Public** ← ต้องเป็น Public ถ้าใช้บัญชีฟรี (Pages ของ repo แบบ Private ต้องมี GitHub Pro)
 - **อย่าติ๊ก** Add README / .gitignore / license (repo นี้มีไฟล์อยู่แล้ว)
 - กด **Create repository**
 
 ## ขั้นที่ 2 — push ขึ้นไป
 
-รันในโฟลเดอร์นี้ (แทน `<USERNAME>` และชื่อ repo ให้ตรงกับของจริง):
+รันในโฟลเดอร์นี้ (แทน `phossatron` และชื่อ repo ให้ตรงกับของจริง):
 
 ```bash
 cd "/Users/pstaex/Desktop/Beyond/Claudecode/Landing page"
-git remote add origin https://github.com/<USERNAME>/beyondlab-landing.git
+git remote add origin https://github.com/phossatron/Sale-page.git
 git push -u origin main
 ```
 
@@ -47,7 +47,7 @@ git push -u origin main
 รอประมาณ 1–2 นาที เว็บจะขึ้นที่:
 
 ```
-https://<USERNAME>.github.io/beyondlab-landing/
+https://phossatron.github.io/Sale-page/
 ```
 
 ---
@@ -68,7 +68,7 @@ Pages จะ deploy ใหม่ให้อัตโนมัติภายใ
 มี 2 ระดับ เลือกใช้ตามความต้องการ
 
 ### ระดับ 1 — ล็อกด้วยคีย์ลับ (ค่าเริ่มต้น ใช้อยู่แล้ว)
-ผู้เข้าชมทั่วไปที่เปิด `https://<USERNAME>.github.io/beyondlab-landing/`
+ผู้เข้าชมทั่วไปที่เปิด `https://phossatron.github.io/Sale-page/`
 **จะไม่เห็นแถบเครื่องมือเลย** (ถูกถอดออกจากหน้าเว็บตั้งแต่ตอนโหลด)
 
 เข้าโหมดแก้ไขได้ 2 ทาง:
