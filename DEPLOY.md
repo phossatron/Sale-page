@@ -20,7 +20,7 @@ repo ถูกเตรียมและ commit ไว้ให้แล้ว 
 ## ขั้นที่ 1 — สร้าง repo บน GitHub
 
 เปิด https://github.com/new แล้ว:
-- **Repository name**: `Sale-page`
+- **Repository name**: `sale-page`
 - **Public** ← ต้องเป็น Public ถ้าใช้บัญชีฟรี (Pages ของ repo แบบ Private ต้องมี GitHub Pro)
 - **อย่าติ๊ก** Add README / .gitignore / license (repo นี้มีไฟล์อยู่แล้ว)
 - กด **Create repository**
@@ -31,7 +31,7 @@ repo ถูกเตรียมและ commit ไว้ให้แล้ว 
 
 ```bash
 cd "/Users/pstaex/Desktop/Beyond/Claudecode/Landing page"
-git remote add origin https://github.com/phossatron/Sale-page.git
+git remote add origin https://github.com/beyondlabth/sale-page.git
 git push -u origin main
 ```
 
@@ -47,10 +47,30 @@ git push -u origin main
 รอประมาณ 1–2 นาที เว็บจะขึ้นที่:
 
 ```
-https://phossatron.github.io/Sale-page/
+https://beyondlabth.github.io/sale-page/
 ```
 
 ---
+
+## ย้าย repo ไปไว้ใต้ชื่อแบรนด์ (ทำครั้งเดียว)
+
+เป้าหมาย: `https://beyondlabth.github.io/sale-page/`
+
+1. **สร้าง organization** → https://github.com/organizations/plan → เลือก **Free**
+   - Organization name: `beyondlabth`
+   - Contact email: อีเมลของคุณ · This organization belongs to: **My personal account**
+2. **ย้าย repo เข้า org** → https://github.com/phossatron/Sale-page/settings
+   → เลื่อนลงล่างสุด **Danger Zone** → **Transfer ownership**
+   → New owner: `beyondlabth` → พิมพ์ชื่อ repo ยืนยัน
+3. **เปลี่ยนชื่อ repo เป็นตัวเล็ก** → Settings → General → Repository name → `sale-page` → **Rename**
+4. **ตรวจ Pages อีกครั้ง** → Settings → Pages → Branch `main` / folder `/docs` → Save
+5. **อัปเดต remote ในเครื่อง**
+   ```bash
+   git remote set-url origin https://github.com/beyondlabth/sale-page.git
+   git remote -v
+   ```
+
+> GitHub จะ redirect URL เก่าไปยัง URL ใหม่ให้ระยะหนึ่ง แต่ควรใช้ URL ใหม่ในการแชร์
 
 ## อัปเดตเว็บครั้งต่อไป
 
@@ -68,7 +88,7 @@ Pages จะ deploy ใหม่ให้อัตโนมัติภายใ
 มี 2 ระดับ เลือกใช้ตามความต้องการ
 
 ### ระดับ 1 — ล็อกด้วยคีย์ลับ (ค่าเริ่มต้น ใช้อยู่แล้ว)
-ผู้เข้าชมทั่วไปที่เปิด `https://phossatron.github.io/Sale-page/`
+ผู้เข้าชมทั่วไปที่เปิด `https://beyondlabth.github.io/sale-page/`
 **จะไม่เห็นแถบเครื่องมือเลย** (ถูกถอดออกจากหน้าเว็บตั้งแต่ตอนโหลด)
 
 เข้าโหมดแก้ไขได้ 2 ทาง:
