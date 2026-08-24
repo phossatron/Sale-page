@@ -1,4 +1,56 @@
 /* ============================================================
+   สิทธิ์เข้าโหมดแก้ไข — ตั้งค่าตรงนี้
+   ------------------------------------------------------------
+   ค่าเริ่มต้น: ผู้เข้าชมทั่วไป "ไม่เห็นแถบเครื่องมือเลย"
+   เปิดโหมดแก้ไขได้ 2 ทาง
+     1) เปิดจากเครื่องตัวเอง (localhost / ไฟล์ในเครื่อง / วง LAN)
+     2) เปิดเว็บด้วยลิงก์ลับ  https://.../?edit=beyond2026
+        เมื่อปลดล็อกแล้ว คีย์จะถูกลบออกจาก URL และจำไว้ในเบราว์เซอร์เครื่องนั้น
+   ล็อกกลับ: กดปุ่ม 🔒 ในแถบเครื่องมือ หรือเปิดด้วย ?edit=0
+   ============================================================ */
+var EDIT_CONFIG = {
+  key: 'beyond2026',      // ⚠️ เปลี่ยนเป็นคำลับของคุณเอง
+  allowLocal: true,       // เปิดจาก localhost / LAN แล้วแก้ได้เลยโดยไม่ต้องใส่คีย์
+  remember: true          // จำการปลดล็อกไว้ในเบราว์เซอร์เครื่องนั้น
+};
+var UNLOCK_KEY = 'beyondlab.editor.unlocked';
+var IS_PREVIEW = /[?&]preview=1/.test(location.search);
+
+function qparam(name) {
+  var m = new RegExp('[?&]' + name + '=([^&]*)').exec(location.search);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+function isLocalHost() {
+  var h = location.hostname;
+  return location.protocol === 'file:' ||
+    /^(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)$/.test(h) ||
+    /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+}
+function localAllowed() { return EDIT_CONFIG.allowLocal && isLocalHost(); }
+function stripEditParam() {
+  if (!history.replaceState) return;
+  var q = location.search.replace(/([?&])edit=[^&]*&?/, '$1').replace(/[?&]$/, '');
+  history.replaceState(null, '', location.pathname + q + location.hash);
+}
+function setUnlocked(on) {
+  try { on ? localStorage.setItem(UNLOCK_KEY, '1') : localStorage.removeItem(UNLOCK_KEY); } catch (e) {}
+}
+function isUnlocked() {
+  try { return localStorage.getItem(UNLOCK_KEY) === '1'; } catch (e) { return false; }
+}
+// ผู้ใช้คนนี้มีสิทธิ์เห็นเครื่องมือแก้ไขหรือไม่
+function editorAllowed() {
+  if (IS_PREVIEW) return false;                       // หน้ามุมมองผู้เข้าชม ไม่มีเครื่องมือเด็ดขาด
+  var k = qparam('edit');
+  if (k !== null) {
+    if (k === EDIT_CONFIG.key) { if (EDIT_CONFIG.remember) setUnlocked(true); stripEditParam(); return true; }
+    if (k === '0' || k === 'off' || k === 'lock') { setUnlocked(false); stripEditParam(); return false; }
+    stripEditParam();                                  // คีย์ผิด — ทำเหมือนผู้เข้าชมทั่วไป
+  }
+  return isUnlocked() || localAllowed();
+}
+
+/* ============================================================
    editor.js — store ข้อมูล + โหมดแก้ไขหน้าเว็บ
    บันทึกอัตโนมัติลง localStorage, ส่งออก/นำเข้าเป็นไฟล์ JSON
    ============================================================ */
@@ -415,6 +467,14 @@ document.addEventListener('keydown', function (e) {
 });
 
 /* ---------- แถบเครื่องมือ ---------- */
+// ถอดแถบเครื่องมือ (และร่องรอยของมัน) ออกจากหน้าเว็บ
+function removeToolbar() {
+  ['toolbar', 'modal', 'preview'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.remove();
+  });
+}
+
 function downloadFile(text, name, type) {
   var blob = new Blob([text], { type: type });
   var a = document.createElement('a');
@@ -461,6 +521,12 @@ function initToolbar() {
     if (!confirm('คืนค่าเนื้อหาทั้งหมดกลับเป็นค่าเริ่มต้น? การแก้ไขที่บันทึกไว้จะหายไป')) return;
     store.reset(); renderAll(); flash('คืนค่าเริ่มต้นแล้ว');
   };
+  document.getElementById('btn-lock').onclick = function () {
+    if (!confirm('ล็อกโหมดแก้ไขบนเบราว์เซอร์นี้?\n\nแถบเครื่องมือจะหายไป และต้องเปิดด้วยลิงก์ลับ ?edit=' +
+                 EDIT_CONFIG.key + ' เพื่อปลดล็อกอีกครั้ง')) return;
+    setUnlocked(false);
+    location.href = location.pathname + '?edit=0';
+  };
   document.getElementById('tb-toggle').onclick = function () {
     document.getElementById('toolbar').classList.toggle('collapsed');
   };
@@ -471,8 +537,6 @@ window.addEventListener('beforeunload', function (e) {
   store.save(); // กันข้อมูลหายเมื่อปิดหน้าเว็บ
 });
 
-var IS_PREVIEW = /[?&]preview=1/.test(location.search);
-
 document.addEventListener('DOMContentLoaded', function () {
   store.load();
   renderAll();
@@ -480,8 +544,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // หน้านี้ถูกเปิดในโหมดผู้เข้าชม — ไม่สร้างเครื่องมือแก้ไขใด ๆ ทั้งสิ้น
     window.EDIT_MODE = false;
     document.body.classList.add('preview-frame');
-    var tb = document.getElementById('toolbar');
-    if (tb) tb.remove();
+    removeToolbar();
+    return;
+  }
+  if (!editorAllowed()) {
+    // ผู้เข้าชมทั่วไป — ถอดแถบเครื่องมือออกจากหน้าเว็บไปเลย
+    window.EDIT_MODE = false;
+    removeToolbar();
     return;
   }
   initToolbar();
