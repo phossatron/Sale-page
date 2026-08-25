@@ -212,7 +212,7 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0}
 body.editing .ed{outline:1.5px dashed rgba(242,101,34,.45);outline-offset:3px;border-radius:4px;min-width:24px;min-height:1em}
 body.editing .ed:focus{outline:2px solid var(--brand);background:#FFFBF7}
 body.editing .item{position:relative}
-body.editing .item-tools{display:flex !important;position:absolute;top:-11px;right:-6px;z-index:20;gap:2px;
+body.editing .item-tools{display:flex !important;position:absolute;top:-13px;right:4px;z-index:20;gap:2px;
   background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:2px}
 body.editing .item-tools button{width:22px;height:22px;border:0;background:none;color:var(--ink-2);
   cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:5px;padding:0}
@@ -378,4 +378,27 @@ body.preview-frame #preview{display:none !important}
 .modal-card .steps b{color:var(--ink)}
 .modal-card input[type=password]{width:100%;padding:9px 12px;border:1px solid var(--line);
   border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+
+/* ---- กันเลย์เอาต์ล้นขอบจอตอนเปิดโหมดแก้ไข (สำคัญบนจอโน้ตบุ๊ก) ---- */
+/* เครื่องมือของแต่ละรายการเป็น absolute จึงต้องมีที่ว่างรองรับ ไม่งั้นจะทับกันและดันหน้าเว็บล้นขอบ */
+body.editing .hero,body.editing .trust,body.editing .sec,
+body.editing .contact,body.editing .hd{overflow-x:clip}
+body.editing .list{padding-top:16px}
+body.editing .grid{gap:30px 20px}
+body.editing .promo-grid,body.editing .faq-grid{gap:26px 20px}
+body.editing .logos,body.editing .stats{gap:30px 22px}
+body.editing .hero-features{gap:30px 28px}
+body.editing .svc{gap:0}
+body.editing .svc .scard{padding-top:30px}
+body.editing .socs,body.editing .chans{gap:26px 22px}
+body.editing .bullets{gap:14px}
+
+/* หัวเว็บ: ให้เมนูขึ้นบรรทัดใหม่ได้ ไม่ดันจนล้น */
+body.editing .hd{height:auto;flex-wrap:wrap;padding-top:14px;padding-bottom:14px;row-gap:14px}
+body.editing .nav{min-width:0;flex-basis:100%;order:3}
+body.editing .nav-list{justify-content:flex-start;gap:26px 22px}
+
+/* ฟอร์มติดต่อ: กล่องตั้งค่าของแต่ละช่องกว้างเต็มคอลัมน์เสมอ */
+body.editing .fld{min-width:0}
+body.editing .fld-edit{max-width:100%}
 /* EDITOR:END */
