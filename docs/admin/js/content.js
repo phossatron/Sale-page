@@ -1,6 +1,6 @@
 /* ============================================================
    content.js — all page content in one place
-   Published from the on-page editor on 25/8/2569 15:38:51
+   Published from the on-page editor on 25/8/2569 15:43:51
    ============================================================ */
 window.DEFAULT_CONTENT = {
   "site": {
@@ -162,7 +162,7 @@ window.DEFAULT_CONTENT = {
       {
         "icon": "chat",
         "title": "No Commercial Support",
-        "desc": "A product on the shelf that doesn't move"
+        "desc": "A product on the shelf that doesn't sell"
       }
     ]
   },
@@ -399,9 +399,7 @@ window.DEFAULT_CONTENT = {
           ]
         }
       ],
-      "sendTo": "sales.international@beyondlabth.co.th",
-        "subject": "New enquiry from the Beyond Lab website",
-        "submit": "Send my details — get a free consultation",
+      "submit": "Send my details — get a free consultation",
       "note": "*Your information is kept strictly confidential."
     }
   },
