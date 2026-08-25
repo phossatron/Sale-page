@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="520" viewBox="0 0 420 520">
+  <rect width="420" height="520" fill="none"/>
+  <g fill="#ffffff" opacity=".95">
+    <circle cx="210" cy="140" r="72"/>
+    <path d="M80 520c0-90 58-150 130-150s130 60 130 150z"/>
+  </g>
+  <text x="210" y="500" text-anchor="middle" font-family="Helvetica,Arial" font-size="18" fill="#F26522">PORTRAIT — replace</text>
+</svg>

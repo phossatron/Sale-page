@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <rect width="960" height="540" fill="#2b3440"/>
+  <g fill="#3c4756"><rect x="520" y="60" width="400" height="420" rx="14"/><circle cx="300" cy="300" r="150"/></g>
+  <text x="480" y="510" text-anchor="middle" font-family="Helvetica,Arial" font-size="22" fill="#8a97a6">VIDEO THUMBNAIL — replace in assets/</text>
+</svg>

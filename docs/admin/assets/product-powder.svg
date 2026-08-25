@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <rect width="600" height="600" fill="#FFF3EA"/>
+  <rect x="150" y="150" width="120" height="330" rx="14" fill="#F26522"/>
+  <text x="210" y="330" text-anchor="middle" font-family="Helvetica,Arial" font-size="20" fill="#fff" transform="rotate(-90 210 330)">BEYOND</text>
+  <path d="M330 300c60 0 110 40 110 90v70H330z" fill="#FFB07A"/>
+  <ellipse cx="385" cy="300" rx="55" ry="16" fill="#FFD3B4"/>
+</svg>

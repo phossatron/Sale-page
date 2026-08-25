@@ -14,6 +14,11 @@ cp -R assets docs/
 cp js/content.js js/icons.js js/render.js js/viewer.js docs/js/
 touch docs/.nojekyll
 
+# --- สำเนาสำหรับผู้ดูแล (มีโหมดแก้ไข) ไว้ที่ /admin ---
+mkdir -p docs/admin
+cp index.html docs/admin/
+cp -R css js assets docs/admin/
+
 node -e '
 const fs = require("fs");
 
@@ -27,6 +32,12 @@ let html = fs.readFileSync("index.html", "utf8");
 html = html.replace(/<!-- EDITOR:START[\s\S]*?EDITOR:END -->\s*/g, "");
 html = html.replace("<!-- VIEWER-ONLY -->", "<script src=\"js/viewer.js\"></script>");
 fs.writeFileSync("docs/index.html", html);
+
+// --- /admin: หน้าเดียวกันแบบมีเครื่องมือแก้ไข + กันไม่ให้ Google เก็บ index ---
+let admin = fs.readFileSync("index.html", "utf8");
+admin = admin.replace("<meta name=\"viewport\"",
+  "<meta name=\"robots\" content=\"noindex,nofollow\">\n<meta name=\"viewport\"");
+fs.writeFileSync("docs/admin/index.html", admin);
 '
 
 files=$(find docs -type f | wc -l | tr -d ' ')
@@ -36,3 +47,5 @@ echo "   ตรวจสอบผลลัพธ์ (ต้องเป็น 0 
 echo "     • โค้ดโหมดแก้ไขใน index.html : $(grep -c 'editor\.js' docs/index.html || true)"
 echo "     • แถบเครื่องมือใน index.html : $(grep -c 'id="toolbar"' docs/index.html || true)"
 echo "     • สไตล์โหมดแก้ไขใน CSS      : $(grep -c 'body.editing' docs/css/style.css || true)"
+echo ""
+echo "   หน้าผู้ดูแล (มีเครื่องมือแก้ไข): docs/admin/  →  <เว็บ>/admin/?edit=<คีย์ลับ>" 
