@@ -650,6 +650,83 @@ function askToken() {
   };
 }
 
+
+/* ============================================================
+   ตรวจหาจุดที่ล้นขอบจอ (Overflow inspector)
+   หาว่า element ไหนกว้างเกินจอจริง ๆ แล้วไฮไลต์ให้เห็น
+   ============================================================ */
+function elDesc(el) {
+  var t = el.tagName.toLowerCase();
+  var c = (el.className && typeof el.className === 'string')
+    ? '.' + el.className.trim().split(/\s+/).slice(0, 3).join('.') : '';
+  var txt = (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 28);
+  return t + c + (txt ? '  “' + txt + '…”' : '');
+}
+
+function scanOverflow() {
+  document.querySelectorAll('.ovf-mark').forEach(function (e) { e.classList.remove('ovf-mark'); });
+
+  var vw = document.documentElement.clientWidth;
+  var docW = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
+  var hits = [];
+
+  document.querySelectorAll('body *').forEach(function (el) {
+    if (el.closest('#toolbar,#modal,#preview,#toast')) return;
+    var cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || cs.position === 'fixed') return;
+    var r = el.getBoundingClientRect();
+    if (!r.width && !r.height) return;
+    var over = Math.round(Math.max(r.right - vw, -r.left));
+    if (over > 1) hits.push({ el: el, over: over, w: Math.round(r.width) });
+  });
+
+  // เก็บเฉพาะตัวนอกสุดของแต่ละสายพันธุ์ (ลูกที่ล้นตามพ่อไม่ต้องรายงานซ้ำ)
+  var outer = hits.filter(function (h) {
+    return !hits.some(function (o) { return o !== h && o.el.contains(h.el) && o.over >= h.over - 1; });
+  }).sort(function (a, b) { return b.over - a.over; });
+
+  outer.slice(0, 12).forEach(function (h) { h.el.classList.add('ovf-mark'); });
+
+  var lines = [
+    'ความกว้างจอ: ' + vw + 'px',
+    'ความกว้างหน้าเว็บ: ' + docW + 'px' + (docW > vw ? '  ← ล้นขอบ ' + (docW - vw) + 'px' : '  ✅ พอดี'),
+    'โหมดแก้ไข: ' + (window.EDIT_MODE ? 'เปิด' : 'ปิด'),
+    'หน้าจอ: ' + window.innerWidth + '×' + window.innerHeight + ' · zoom ' + Math.round(window.devicePixelRatio * 100) / 100,
+    ''
+  ];
+  if (!outer.length) lines.push('✅ ไม่พบ element ที่ยื่นออกนอกจอ');
+  else outer.slice(0, 12).forEach(function (h, i) {
+    lines.push((i + 1) + '. ล้น ' + h.over + 'px (กว้าง ' + h.w + 'px)  ' + elDesc(h.el));
+  });
+
+  var report = lines.join('\n');
+  var m = document.getElementById('modal');
+  m.innerHTML =
+    '<div class="modal-card">' +
+      '<h3>ผลตรวจจุดตกขอบ</h3>' +
+      '<pre class="ovf-report">' + report.replace(/[<>&]/g, function (ch) {
+        return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[ch];
+      }) + '</pre>' +
+      '<p class="hint">จุดที่พบถูกตีกรอบสีแดงไว้บนหน้าเว็บแล้ว (กดปิดแล้วเลื่อนดูได้)</p>' +
+      '<div class="modal-act">' +
+        '<button class="btn ghost sm" id="m-copy" type="button">คัดลอกรายงาน</button>' +
+        '<span class="spacer"></span>' +
+        '<button class="btn ghost" id="m-clear" type="button">ล้างกรอบแดง</button>' +
+        '<button class="btn primary" id="m-cancel" type="button">ปิด</button>' +
+      '</div>' +
+    '</div>';
+  m.classList.add('open');
+  m.querySelector('#m-cancel').onclick = closeModal;
+  m.querySelector('#m-clear').onclick = function () {
+    document.querySelectorAll('.ovf-mark').forEach(function (e) { e.classList.remove('ovf-mark'); });
+    closeModal();
+  };
+  m.querySelector('#m-copy').onclick = function () {
+    if (navigator.clipboard) navigator.clipboard.writeText(report).then(function () { flash('คัดลอกรายงานแล้ว'); });
+    else { downloadFile(report, 'overflow-report.txt', 'text/plain'); flash('ดาวน์โหลดรายงานแล้ว'); }
+  };
+}
+
 /* ---------- แถบเครื่องมือ ---------- */
 // ถอดแถบเครื่องมือ (และร่องรอยของมัน) ออกจากหน้าเว็บ
 function removeToolbar() {
@@ -706,6 +783,7 @@ function initToolbar() {
     if (!confirm('คืนค่าเนื้อหาทั้งหมดกลับเป็นค่าเริ่มต้น? การแก้ไขที่บันทึกไว้จะหายไป')) return;
     store.reset(); renderAll(); flash('คืนค่าเริ่มต้นแล้ว');
   };
+  document.getElementById('btn-scan').onclick = scanOverflow;
   document.getElementById('btn-lock').onclick = function () {
     if (!confirm('ล็อกโหมดแก้ไขบนเบราว์เซอร์นี้?\n\nแถบเครื่องมือจะหายไป และต้องเปิดด้วยลิงก์ลับ ?edit=' +
                  EDIT_CONFIG.key + ' เพื่อปลดล็อกอีกครั้ง')) return;

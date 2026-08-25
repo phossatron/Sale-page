@@ -29,7 +29,7 @@
     'hero.image':            { name: 'ภาพพื้นหลัง Hero', box: '',                                                fit: 'cover',   pos: 'center',        max: 1920, bg: true },
     'about.video.image':     { name: 'ภาพปกวิดีโอ',      box: '',                                                fit: 'cover',   pos: 'center',        max: 1600, bg: true },
     'pricing.cards.*.image': { name: 'ภาพสินค้า',        box: 'aspect-ratio:1/1',                                fit: 'cover',   pos: 'center',        max: 1000 },
-    'contact.image':         { name: 'ภาพบุคคล',         box: 'width:auto;height:340px;aspect-ratio:3/4;margin:0 auto', fit: 'contain', pos: 'bottom center', max: 900  }
+    'contact.image':         { name: 'ภาพบุคคล',         box: 'width:100%;max-width:260px;aspect-ratio:3/4;margin:0 auto', fit: 'contain', pos: 'bottom center', max: 900  }
   };
   var SLOT_DEFAULT = { name: 'รูปภาพ', box: 'aspect-ratio:4/3', fit: 'cover', pos: 'center', max: 1600 };
 
