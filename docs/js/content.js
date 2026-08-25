@@ -1,6 +1,6 @@
 /* ============================================================
    content.js — all page content in one place
-   Published from the on-page editor on 25/8/2569 15:22:44
+   Published from the on-page editor on 25/8/2569 15:38:51
    ============================================================ */
 window.DEFAULT_CONTENT = {
   "site": {
@@ -107,7 +107,7 @@ window.DEFAULT_CONTENT = {
         "label": "LAOS"
       },
       {
-        "label": "GERMAN"
+        "label": "GERMANY"
       },
       {
         "label": "CAMBODIA"
