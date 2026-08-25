@@ -1,6 +1,6 @@
 /* ============================================================
    content.js — all page content in one place
-   Published from the on-page editor on 25/8/2569 15:05:13
+   Published from the on-page editor on 25/8/2569 15:18:35
    ============================================================ */
 window.DEFAULT_CONTENT = {
   "site": {
@@ -327,7 +327,7 @@ window.DEFAULT_CONTENT = {
     "channels": [
       {
         "icon": "phone",
-        "label": "+66 94 681 1116",
+        "label": "+66 82 858 9944<br>+66 63 598 7837",
         "href": "tel:+66946811116"
       },
       {
@@ -337,7 +337,7 @@ window.DEFAULT_CONTENT = {
       },
       {
         "icon": "mail",
-        "label": "info@beyondlab.co.th",
+        "label": "sales.international@beyondlab.co.th",
         "href": "mailto:info@beyondlab.co.th"
       }
     ],
