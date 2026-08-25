@@ -516,11 +516,26 @@ function ghApi(path, opts) {
   });
 }
 
-// เขียนไฟล์เดียว (ต้องดึง sha ปัจจุบันก่อนถ้ามีไฟล์อยู่แล้ว)
-function ghPutFile(path, text, message) {
+// หา sha ปัจจุบันของไฟล์ — ถ้าไฟล์ใหญ่เกิน 1MB API ปกติจะดึงไม่ได้
+// จึงถอยไปอ่านรายการไฟล์ในโฟลเดอร์แทน (ได้ sha เสมอไม่ว่าไฟล์ใหญ่แค่ไหน)
+function ghFileSha(path) {
   return ghApi('contents/' + path + '?ref=' + PUBLISH.branch)
     .then(function (info) { return info.sha; })
-    .catch(function () { return null; })
+    .catch(function () {
+      var dir = path.indexOf('/') < 0 ? '' : path.slice(0, path.lastIndexOf('/'));
+      var name = path.slice(path.lastIndexOf('/') + 1);
+      return ghApi('contents/' + dir + '?ref=' + PUBLISH.branch)
+        .then(function (list) {
+          for (var i = 0; i < list.length; i++) if (list[i].name === name) return list[i].sha;
+          return null;                 // ไม่มีไฟล์นี้มาก่อน — สร้างใหม่
+        })
+        .catch(function () { return null; });
+    });
+}
+
+// เขียนไฟล์เดียว
+function ghPutFile(path, text, message) {
+  return ghFileSha(path)
     .then(function (sha) {
       var body = { message: message, content: toBase64(text), branch: PUBLISH.branch };
       if (sha) body.sha = sha;
@@ -532,6 +547,9 @@ function publishToWeb() {
   if (!ghToken()) return askToken();
   var code = contentFileSource();
   var sizeKB = Math.round(new Blob([code]).size / 1024);
+  if (sizeKB > 900 && !confirm('⚠️ ข้อมูลมีขนาด ' + sizeKB + ' KB ซึ่งใหญ่ผิดปกติ\n\n' +
+      'มักเกิดจากรูปที่อัปโหลดถูกฝังเป็นข้อมูลในไฟล์ ทำให้เว็บโหลดช้า\n' +
+      'แนะนำให้วางไฟล์รูปไว้ในโฟลเดอร์ assets/ แล้วอ้างอิงเป็น path แทน\n\nต้องการเผยแพร่ต่อไหม?')) return;
   if (!confirm('เผยแพร่เนื้อหาปัจจุบันขึ้นเว็บจริง?\n\n' +
       'ขนาดข้อมูล: ' + sizeKB + ' KB\n' +
       'ระบบจะอัปเดตไฟล์ ' + PUBLISH.paths.length + ' จุดใน GitHub\n' +
