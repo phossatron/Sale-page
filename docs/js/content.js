@@ -1,6 +1,6 @@
 /* ============================================================
    content.js — all page content in one place
-   Published from the on-page editor on 25/8/2569 13:47:45
+   Published from the on-page editor on 25/8/2569 14:33:25
    ============================================================ */
 window.DEFAULT_CONTENT = {
   "site": {
@@ -113,7 +113,7 @@ window.DEFAULT_CONTENT = {
         "label": "LAOS"
       },
       {
-        "label": "GERMAN"
+        "label": "GERMANY"
       },
       {
         "label": "CAMBODIA"
@@ -168,7 +168,7 @@ window.DEFAULT_CONTENT = {
       {
         "icon": "chat",
         "title": "No Commercial Support",
-        "desc": "A product on the shelf that doesn't move"
+        "desc": "A product on the shelf that doesn't sell"
       }
     ]
   },
