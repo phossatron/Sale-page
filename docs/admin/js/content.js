@@ -1,6 +1,6 @@
 /* ============================================================
    content.js — all page content in one place
-   Published from the on-page editor on 25/8/2569 15:19:41
+   Published from the on-page editor on 25/8/2569 15:22:44
    ============================================================ */
 window.DEFAULT_CONTENT = {
   "site": {
@@ -337,7 +337,7 @@ window.DEFAULT_CONTENT = {
       },
       {
         "icon": "mail",
-        "label": "sales.international@beyondlab.co.th",
+        "label": "sales.international@beyondlabth.co.th",
         "href": "mailto:info@beyondlab.co.th"
       }
     ],
