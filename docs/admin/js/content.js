@@ -1,6 +1,6 @@
 /* ============================================================
    content.js — all page content in one place
-   Published from the on-page editor on 25/8/2569 13:45:40
+   Published from the on-page editor on 25/8/2569 13:47:45
    ============================================================ */
 window.DEFAULT_CONTENT = {
   "site": {
@@ -236,19 +236,6 @@ window.DEFAULT_CONTENT = {
         "note": "(Terms and conditions apply.)",
         "badge": "Minimum 1,000 boxes",
         "badgeSub": "(10 sachets per box)"
-      },
-      {
-        "image": "assets/product-capsule.svg",
-        "ribbon": "Ready to sell",
-        "title": "New package<br><span class=\"hl\">All-inclusive from</span>",
-        "price": "00,000",
-        "unit": "THB",
-        "bullets": [
-          "Production included"
-        ],
-        "note": "(Terms and conditions apply.)",
-        "badge": "Minimum 1,000 units",
-        "badgeSub": ""
       }
     ],
     "button": {
