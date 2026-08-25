@@ -399,7 +399,9 @@ window.DEFAULT_CONTENT = {
           ]
         }
       ],
-      "submit": "Send my details — get a free consultation",
+      "sendTo": "sales.international@beyondlabth.co.th",
+        "subject": "New enquiry from the Beyond Lab website",
+        "submit": "Send my details — get a free consultation",
       "note": "*Your information is kept strictly confidential."
     }
   },

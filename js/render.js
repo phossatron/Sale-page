@@ -7,6 +7,9 @@
 (function () {
   var esc = function (s) { return String(s == null ? "" : s); };
 
+  // อีเมลปลายทางของฟอร์มติดต่อ (ค่าสำรอง หากข้อมูลใน content ไม่ได้ระบุไว้)
+  var FALLBACK_SEND_TO = 'sales.international@beyondlabth.co.th';
+
   /* ---------- helpers ---------- */
   // เครื่องมือแก้ไขทั้งหมดจะถูก "สร้างลง DOM เฉพาะตอนอยู่ในโหมดแก้ไข" เท่านั้น
   // มุมมองผู้เข้าชมจึงไม่มีปุ่มเหล่านี้อยู่ในหน้าเลย (ไม่ใช่แค่ซ่อนด้วย CSS)
@@ -254,8 +257,14 @@
               '<label><span>ตัวเลือก (คั่นด้วย ,)</span><input data-input-list="' + p + '.options" value="' + esc((it.options || []).join(', ')) + '"></label>' +
             '</div>') + ITEM_TOOLS('contact.form.fields', i) + '</div>';
         }, 'fields', 'เพิ่มช่องกรอก') +
+        '<input type="text" name="_honey" class="honey" tabindex="-1" autocomplete="off" aria-hidden="true">' +
         '<button class="btn dark block" type="submit">' + T('span', 'contact.form.submit') + '</button>' +
+        '<p class="form-status" role="status" aria-live="polite"></p>' +
         T('p', 'contact.form.note', 'form-note') +
+        EO('<label class="edit-only field"><span>ส่งข้อมูลจากฟอร์มไปที่อีเมล</span>' +
+           '<input type="email" data-input="contact.form.sendTo" value="' + esc(f.sendTo || FALLBACK_SEND_TO) + '"></label>' +
+           '<label class="edit-only field"><span>หัวข้ออีเมล</span>' +
+           '<input data-input="contact.form.subject" value="' + esc(f.subject || '') + '"></label>') +
       '</form>' +
       '</div></section>';
   }
@@ -284,13 +293,72 @@
     if (window.afterRender) window.afterRender();
   };
 
+  /* ส่งข้อมูลฟอร์มเข้าอีเมลผ่าน FormSubmit (ไม่ต้องมี backend)
+     ปลายทางตั้งได้ที่ contact.form.sendTo ในโหมดแก้ไข */
   window.beyondSubmit = function (e) {
     e.preventDefault();
-    var fd = new FormData(e.target), out = [];
-    fd.forEach(function (v, k) { out.push(k + ': ' + v); });
-    alert('Thank you — your details have been received (demo).\n\n' + out.join('\n') +
-      '\n\n* Connect your backend / CRM / LINE API inside beyondSubmit().');
-    e.target.reset();
+    var form = e.target;
+    var cfg = store.get('contact.form') || {};
+    var to = (cfg.sendTo || FALLBACK_SEND_TO).trim();
+    var status = form.querySelector('.form-status');
+    var btn = form.querySelector('button[type=submit]');
+
+    var raw = {};
+    new FormData(form).forEach(function (v, k) { raw[k] = v; });
+    if (raw._honey) return false;                        // บอตกรอกกับดัก — ทิ้งเงียบ ๆ
+
+    // ตรวจข้อมูลที่จำเป็น (ช่องแบบเลือกไม่บังคับ)
+    var missing = (cfg.fields || []).filter(function (fl) {
+      return fl.type !== 'select' && !String(raw[fl.name] || '').trim();
+    });
+    if (missing.length) {
+      say(status, 'Please fill in: ' + missing.map(function (f) { return f.label; }).join(', '), 'err');
+      return false;
+    }
+
+    // ส่งโดยใช้ "ป้ายกำกับ" เป็นชื่อฟิลด์ อีเมลที่ได้จะอ่านง่าย
+    var data = {};
+    (cfg.fields || []).forEach(function (fl) {
+      data[fl.label || fl.name] = raw[fl.name] || '—';
+    });
+    data._subject = cfg.subject || 'New enquiry from the website';
+    data._template = 'table';
+    data._captcha = 'false';
+    data['Submitted at'] = new Date().toLocaleString('en-GB');
+    data['Page'] = location.href;
+
+    btn.disabled = true;
+    say(status, 'Sending…', '');
+
+    fetch('https://formsubmit.co/ajax/' + encodeURIComponent(to), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        btn.disabled = false;
+        if (j && (j.success === 'true' || j.success === true)) {
+          form.reset();
+          say(status, 'Thank you — we have received your details and will be in touch shortly.', 'ok');
+        } else if (j && /activat/i.test(j.message || '')) {
+          say(status, 'Almost there — the recipient inbox must confirm the activation email once. ' +
+                      'Please try again after confirming.', 'err');
+        } else {
+          throw new Error((j && j.message) || 'Unexpected response');
+        }
+      })
+      .catch(function (err) {
+        btn.disabled = false;
+        say(status, 'Could not send right now. Please contact us directly at ' + to +
+                    ' (' + String(err.message || err) + ')', 'err');
+      });
     return false;
   };
+
+  function say(el, msg, kind) {
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'form-status' + (kind ? ' ' + kind : '');
+  }
 })();

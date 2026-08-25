@@ -184,6 +184,13 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0}
   width:100%;padding:12px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.6);
   background:rgba(255,255,255,.96);color:var(--ink);font-family:inherit;font-size:14.5px}
 .form-note{font-size:11.5px;text-align:right;opacity:.9}
+/* กับดักบอต — ต้องมองไม่เห็นแต่ยังอยู่ในหน้า */
+.honey{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+/* ข้อความผลลัพธ์หลังกดส่ง */
+.form-status{font-size:13px;line-height:1.55;margin-top:2px;min-height:0}
+.form-status:empty{display:none}
+.form-status.ok{background:rgba(255,255,255,.96);color:#166534;border-radius:8px;padding:10px 14px;font-weight:500}
+.form-status.err{background:rgba(127,29,29,.92);color:#FEE2E2;border-radius:8px;padding:10px 14px}
 
 /* footer */
 .site-footer{background:#111827;color:#9CA3AF;padding:22px 0;font-size:13px;text-align:center}
