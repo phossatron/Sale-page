@@ -9,16 +9,27 @@
    ล็อกกลับ: กดปุ่ม 🔒 ในแถบเครื่องมือ หรือเปิดด้วย ?edit=0
    ============================================================ */
 var EDIT_CONFIG = {
-  key: 'beyond2026',      // ⚠️ เปลี่ยนเป็นคำลับของคุณเอง
+  key: 'beyond2026',      // คีย์สำหรับปลดล็อกหน้าเว็บหลัก (?edit=...)
   allowLocal: true,       // เปิดจาก localhost / LAN แล้วแก้ได้เลยโดยไม่ต้องใส่คีย์
-  remember: true          // จำการปลดล็อกไว้ในเบราว์เซอร์เครื่องนั้น
+  remember: true,         // จำการปลดล็อกไว้ในเบราว์เซอร์เครื่องนั้น
+  adminPathOpen: true     // หน้า /admin/ เปิดเครื่องมือให้เสมอ (ตัว path เองคือความลับ)
 };
 var UNLOCK_KEY = 'beyondlab.editor.unlocked';
 var IS_PREVIEW = /[?&]preview=1/.test(location.search);
 
+// อ่านค่าจาก query หรือ hash ก็ได้ (เผื่อลิงก์ถูกแอปแชทตัดต่อ)
 function qparam(name) {
-  var m = new RegExp('[?&]' + name + '=([^&]*)').exec(location.search);
+  var src = location.search + '&' + String(location.hash || '').replace('#', '&');
+  var m = new RegExp('[?&]' + name + '=([^&#]*)').exec(src);
   return m ? decodeURIComponent(m[1]) : null;
+}
+// เทียบคีย์แบบไม่ถือสาช่องว่างหรือตัวพิมพ์เล็กใหญ่ (คนมัก copy มาแล้วติดช่องว่าง)
+function sameKey(a, b) {
+  return String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+}
+// อยู่ที่หน้าผู้ดูแล /admin/ หรือไม่
+function isAdminPath() {
+  return /\/admin\/?$/i.test(String(location.pathname).replace(/index\.html$/i, ''));
 }
 function isLocalHost() {
   var h = location.hostname;
@@ -33,22 +44,38 @@ function stripEditParam() {
   history.replaceState(null, '', location.pathname + q + location.hash);
 }
 function setUnlocked(on) {
-  try { on ? localStorage.setItem(UNLOCK_KEY, '1') : localStorage.removeItem(UNLOCK_KEY); } catch (e) {}
+  try {
+    on ? localStorage.setItem(UNLOCK_KEY, '1') : localStorage.removeItem(UNLOCK_KEY);
+    return true;
+  } catch (e) { return false; }   // เบราว์เซอร์บล็อกการบันทึก (เช่น โหมดส่วนตัว)
 }
 function isUnlocked() {
   try { return localStorage.getItem(UNLOCK_KEY) === '1'; } catch (e) { return false; }
 }
 // ผู้ใช้คนนี้มีสิทธิ์เห็นเครื่องมือแก้ไขหรือไม่
 function editorAllowed() {
-  if (IS_PREVIEW) return false;                       // หน้ามุมมองผู้เข้าชม ไม่มีเครื่องมือเด็ดขาด
+  if (IS_PREVIEW) return false;                        // หน้ามุมมองผู้เข้าชม ไม่มีเครื่องมือเด็ดขาด
+
   var k = qparam('edit');
+  if (k !== null && (sameKey(k, '0') || sameKey(k, 'off') || sameKey(k, 'lock'))) {
+    setUnlocked(false); stripEditParam(); return false;   // สั่งล็อก
+  }
+  // หน้าผู้ดูแล: เปิดเครื่องมือเสมอ ไม่ต้องพึ่งคีย์หรือ localStorage
+  // (ป้องกันอาการ "เครื่องอื่นเข้าแก้ไม่ได้" เวลาลิงก์ถูกแชร์ต่อโดยไม่มีคีย์)
+  if (EDIT_CONFIG.adminPathOpen && isAdminPath()) return true;
+
   if (k !== null) {
-    if (k === EDIT_CONFIG.key) { if (EDIT_CONFIG.remember) setUnlocked(true); stripEditParam(); return true; }
-    if (k === '0' || k === 'off' || k === 'lock') { setUnlocked(false); stripEditParam(); return false; }
-    stripEditParam();                                  // คีย์ผิด — ทำเหมือนผู้เข้าชมทั่วไป
+    if (sameKey(k, EDIT_CONFIG.key)) {
+      // ลบคีย์ออกจาก URL ก็ต่อเมื่อจำการปลดล็อกได้จริงเท่านั้น
+      // ไม่งั้นพอรีเฟรชจะหลุดออกจากโหมดแก้ไขทันที
+      if (EDIT_CONFIG.remember && setUnlocked(true) && isUnlocked()) stripEditParam();
+      return true;
+    }
+    badKeyUsed = true;                                 // คีย์ผิด — แจ้งเตือนหลังหน้าโหลดเสร็จ
   }
   return isUnlocked() || localAllowed();
 }
+var badKeyUsed = false;
 
 /* ============================================================
    editor.js — store ข้อมูล + โหมดแก้ไขหน้าเว็บ
@@ -708,6 +735,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!editorAllowed()) {
     // ผู้เข้าชมทั่วไป — ถอดแถบเครื่องมือออกจากหน้าเว็บไปเลย
     window.EDIT_MODE = false;
+    if (badKeyUsed) alert('คีย์สำหรับเข้าโหมดแก้ไขไม่ถูกต้อง\n\nหน้าผู้ดูแลอยู่ที่ .../admin/');
     removeToolbar();
     return;
   }
