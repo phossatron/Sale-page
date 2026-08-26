@@ -40,8 +40,27 @@ admin = admin.replace("<meta name=\"viewport\"",
 fs.writeFileSync("docs/admin/index.html", admin);
 '
 
+# ---- ตรวจกันพลาด: ถ้า build ตัดของที่ต้องมีออกไป ให้ล้มทันที ----
+fail=0
+mq=$(grep -c "@media" docs/css/style.css || true)
+if [ "$mq" -lt 3 ]; then
+  echo "❌ production CSS มี @media แค่ $mq บล็อก — เว็บจะไม่รองรับมือถือ!"; fail=1
+fi
+if [ "$(grep -c 'editor\.js' docs/index.html || true)" != "0" ]; then
+  echo "❌ หน้าเว็บหลักยังมีโค้ดโหมดแก้ไขติดไป"; fail=1
+fi
+if [ "$(grep -c 'body.editing' docs/css/style.css || true)" != "0" ]; then
+  echo "❌ CSS ของโหมดแก้ไขติดไปกับเว็บจริง"; fail=1
+fi
+if [ ! -s docs/js/content.js ] || [ ! -s docs/index.html ]; then
+  echo "❌ ไฟล์หลักหายไป"; fail=1
+fi
+if [ "$fail" = "1" ]; then echo ""; echo "build ล้มเหลว — อย่า push จนกว่าจะแก้"; exit 1; fi
+
 files=$(find docs -type f | wc -l | tr -d ' ')
 echo "✅ สร้าง docs/ เรียบร้อย — $files ไฟล์ / $(du -sh docs | cut -f1)"
+echo ""
+echo "   ✔ media query ในเว็บจริง: $mq บล็อก (รองรับมือถือ)"
 echo ""
 echo "   ตรวจสอบผลลัพธ์ (ต้องเป็น 0 ทั้งหมด):"
 echo "     • โค้ดโหมดแก้ไขใน index.html : $(grep -c 'editor\.js' docs/index.html || true)"

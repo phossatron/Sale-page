@@ -9,9 +9,15 @@
   --wrap:1180px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%;   /* iOS Safari ขยายตัวอักษรเองตอนหมุนจอ ทำให้สเกลเพี้ยน */
+  text-size-adjust:100%;
+}
 body{
   margin:0;background:var(--bg);color:var(--ink);
+  overflow-x:clip;                 /* กันหน้าเลื่อนซ้ายขวาได้ (clip ไม่ทำให้ sticky header เสีย) */
+  overflow-wrap:break-word;        /* คำ/อีเมล/URL ยาว ๆ ให้ตัดบรรทัด ไม่ดันจนล้นขอบ */
   font-family:"IBM Plex Sans Thai","Noto Sans Thai",-apple-system,"Segoe UI",sans-serif;
   font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;
 }
@@ -167,7 +173,8 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0}
 .contact{background:linear-gradient(100deg,var(--brand),#FF8A3D);color:#fff;padding:48px 0}
 .contact-in{display:grid;grid-template-columns:1.1fr .6fr 1fr;gap:24px;align-items:center}
 /* กันคอลัมน์ยืดตามเนื้อหาจนดันหน้าเว็บล้นขอบ (min-width ปกติของ grid คือ auto) */
-.contact-in>*,.grid>*,.promo-grid>*,.faq-grid>*,.hero-in>*,.about>*,.stats>*{min-width:0}
+.contact-in>*,.grid>*,.promo-grid>*,.faq-grid>*,.hero-in>*,.about>*,.stats>*,
+.hd>*,.hf>*,.chan>*,.scard>*,.promo-card>*,.ab>*,.logos>*{min-width:0}
 .c-head{font-size:clamp(20px,2.4vw,27px)}
 .c-sub{font-size:clamp(22px,2.8vw,32px);font-weight:700;margin-top:6px}
 .chans{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:20px;font-size:14.5px}
@@ -210,6 +217,70 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0}
 .icobtn{background:none;border:0;padding:0;color:var(--brand);cursor:default;display:inline-flex}
 .icobtn.big .ic{width:34px;height:34px}
 .pcard .icobtn.big,.ab .icobtn.big{display:block;margin:0 auto}
+
+/* ============================================================
+   RESPONSIVE — ต้องอยู่นอกบล็อก EDITOR เสมอ ไม่งั้นจะถูกตัดตอน build
+   แล้วเว็บจริงจะไม่รองรับมือถือ
+   ============================================================ */
+/* ---------- มือถือ: กัน iOS ซูมหน้าจอเองตอนแตะช่องกรอก ----------
+   Safari บน iOS จะซูมเข้าอัตโนมัติถ้า input มีฟอนต์เล็กกว่า 16px แล้วไม่ซูมกลับ
+   ทำให้ทั้งหน้าดูสเกลเพี้ยนและล้นขอบ */
+@media (max-width:900px){
+  input,select,textarea,button{font-size:16px}
+  .contact-form input,.contact-form select,.contact-form textarea{font-size:16px}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:1024px){
+  .g5{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .g3,.svc{grid-template-columns:repeat(2,1fr)}
+  .svc .scard{border-right:1px solid var(--line)}
+  .svc .scard:nth-child(2n){border-right:0}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .stat:nth-child(4){border-left:0}
+  .about{grid-template-columns:1fr}
+  .contact-in{grid-template-columns:1fr 1fr}
+  .contact-art{display:none}
+  .hd{height:auto;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+}
+@media (max-width:720px){
+  .g5,.g4,.g3,.svc,.promo-grid,.faq-grid,.contact-in{grid-template-columns:1fr}
+  .svc .scard{border-right:0}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-left:0}
+  .hero-badge{display:none}
+  .hero-bg::after{background:rgba(255,255,255,.9)}
+  .nav-list{gap:12px}
+  .promo-card{flex-direction:column}
+  .promo-media{width:100%}
+  /* โลโก้: กรอบถูกกำหนดเป็น inline style จาก slot จึงต้อง !important */
+  .logo-img{width:142px !important;height:42px !important}
+  /* ข้อความบนวิดีโอเดิมใหญ่เกินกรอบบนจอเล็ก */
+  .video-txt{font-size:18px;left:16px}
+  .play{width:52px;height:52px;right:8%}
+  .play .ic{width:20px;height:20px}
+  .hero{min-height:auto}
+  .hero-in{padding-top:36px;padding-bottom:36px}
+  .sec{padding:44px 0}
+  .promo{padding:14px}
+  .trust .card{padding:18px 16px}
+  /* ปุ่มลอยด้านขวาทับเนื้อหาบนจอแคบ → ย้ายลงเป็นแถบล่างเต็มความกว้าง */
+  .floating{
+    top:auto;left:0;right:0;bottom:0;transform:none;
+    flex-direction:row;justify-content:center;align-items:center;gap:6px;
+    background:rgba(255,255,255,.97);border-top:1px solid var(--line);
+    box-shadow:0 -2px 14px rgba(17,24,39,.10);
+    padding:6px 8px;padding-bottom:calc(6px + env(safe-area-inset-bottom));
+  }
+  .floating .fl-list{display:flex;flex-direction:row;gap:6px;flex-wrap:nowrap}
+  .fl a,.fl.top{width:auto;min-width:50px;height:44px;border-radius:10px;box-shadow:none;padding:0 6px}
+  .fl .ic{width:18px;height:18px}
+  .fl-label{font-size:8.5px}
+  /* เว้นที่ให้แถบล่าง ไม่ให้บังท้ายเพจ */
+  body{padding-bottom:62px}
+  .site-footer{padding-bottom:16px}
+}
 
 /* EDITOR:START — ตั้งแต่บรรทัดนี้ถึง EDITOR:END จะถูกตัดออกเมื่อรัน ./build.sh */
 /* ============================================================
@@ -308,35 +379,6 @@ body.editing .floating .fl-list{display:flex;flex-wrap:wrap;gap:14px;justify-con
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.err{background:#DC2626}
 
-/* ---------- responsive ---------- */
-@media (max-width:1024px){
-  .g5{grid-template-columns:repeat(3,1fr)}
-  .g4{grid-template-columns:repeat(2,1fr)}
-  .g3,.svc{grid-template-columns:repeat(2,1fr)}
-  .svc .scard{border-right:1px solid var(--line)}
-  .svc .scard:nth-child(2n){border-right:0}
-  .stats{grid-template-columns:repeat(3,1fr)}
-  .stat:nth-child(4){border-left:0}
-  .about{grid-template-columns:1fr}
-  .contact-in{grid-template-columns:1fr 1fr}
-  .contact-art{display:none}
-  .hd{height:auto;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
-}
-@media (max-width:720px){
-  .g5,.g4,.g3,.svc,.promo-grid,.faq-grid,.contact-in{grid-template-columns:1fr}
-  .svc .scard{border-right:0}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .stat{border-left:0}
-  .hero-badge{display:none}
-  .hero-bg::after{background:rgba(255,255,255,.9)}
-  .nav-list{gap:12px}
-  .promo-card{flex-direction:column}
-  .promo-media{width:100%}
-  .floating{right:8px}
-  .fl a,.fl.top{width:44px;height:44px}
-  .toolbar{left:8px;bottom:8px}
-}
-
 /* ============================================================
    มุมมองผู้เข้าชม (visitor preview)
    ============================================================ */
@@ -416,4 +458,7 @@ body.editing .fld-edit{max-width:100%}
   background:rgba(220,38,38,.08) !important}
 .ovf-report{background:#0F172A;color:#E5E7EB;border-radius:8px;padding:12px;font-size:11.5px;
   line-height:1.7;overflow-x:auto;white-space:pre;margin-bottom:12px;max-height:44vh}
+@media (max-width:720px){
+  .toolbar{left:8px;bottom:70px}   /* หลบแถบปุ่มลอยด้านล่างบนมือถือ */
+}
 /* EDITOR:END */
