@@ -505,7 +505,8 @@ var PUBLISH = {
   branch: 'main',
   // ไฟล์ทุกชุดที่ต้องอัปเดตพร้อมกัน (ต้นฉบับ + เวอร์ชันที่ deploy + หน้าผู้ดูแล)
   paths: ['js/content.js', 'docs/js/content.js', 'docs/admin/js/content.js'],
-  site: 'https://phossatron.github.io/Sale-page/'
+  // คำนวณจาก URL ที่กำลังเปิดอยู่ → ใช้ได้ทั้ง github.io และโดเมนของบริษัท
+  get site() { return location.origin + location.pathname.replace(/admin\/?$/, ''); }
 };
 var TOKEN_KEY = 'beyondlab.gh.token';
 

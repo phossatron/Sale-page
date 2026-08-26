@@ -91,20 +91,53 @@ git add -A && git commit -m "update content" && git push
 
 ---
 
-## ผูกโดเมนของบริษัท (ทำเมื่อไหร่ก็ได้)
+## ผูกโดเมนของบริษัท — international.beyondlab.co.th
 
-อยากได้ `https://sale.beyondlab.co.th` แทน URL ของ github.io:
+เป้าหมาย: `https://international.beyondlab.co.th/` แทน `phossatron.github.io/Sale-page/`
 
-1. เพิ่ม DNS record ที่ผู้ให้บริการโดเมน
+### ขั้นที่ 1 — เพิ่ม DNS record (ต้องทำก่อนเสมอ)
 
-   | Type | Name | Value |
-   |---|---|---|
-   | CNAME | `sale` | `phossatron.github.io` |
+ที่ระบบจัดการ DNS ของโดเมน **beyondlab.co.th** เพิ่ม 1 record:
 
-2. Settings → Pages → **Custom domain** → ใส่ `sale.beyondlab.co.th` → Save
-3. ติ๊ก **Enforce HTTPS** (ขึ้นให้ติ๊กหลัง GitHub ออกใบรับรองเสร็จ ~15 นาที)
+| Type | Name / Host | Value / Points to | TTL |
+|---|---|---|---|
+| `CNAME` | `international` | `phossatron.github.io` | Auto (หรือ 3600) |
 
-ระบบจะสร้างไฟล์ `CNAME` ใน repo ให้เอง — **อย่าลบ** และถ้ารัน `./build.sh` ให้ย้ายไฟล์นั้นไปไว้ใน `docs/` ด้วย
+> ค่า Value คือ `phossatron.github.io` **เท่านั้น** ไม่ต้องมี `/Sale-page` ต่อท้าย
+> บางผู้ให้บริการต้องใส่จุดปิดท้ายเป็น `phossatron.github.io.`
+
+### ขั้นที่ 2 — รอ DNS มีผล แล้วค่อยเปิดใช้
+
+ตรวจว่า DNS พร้อมหรือยัง:
+```bash
+dig +short international.beyondlab.co.th
+# ต้องได้ phossatron.github.io. ตามด้วยหมายเลข IP ของ GitHub (185.199.108-111.153)
+```
+
+เมื่อขึ้นแล้วจึงเปิดใช้:
+```bash
+cd "/Users/pstaex/Desktop/Beyond/Claudecode/Landing page"
+sed -i '' 's|CUSTOM_DOMAIN=""|CUSTOM_DOMAIN="international.beyondlab.co.th"|' build.sh
+./build.sh
+git add -A && git commit -m "Point the site at international.beyondlab.co.th" && git push
+```
+
+### ขั้นที่ 3 — เปิด HTTPS
+
+GitHub จะอ่านไฟล์ `docs/CNAME` แล้วตั้งค่า Custom domain ให้เอง
+รอประมาณ 15 นาทีให้ออกใบรับรอง แล้วเข้า Settings → Pages → ติ๊ก **Enforce HTTPS**
+
+### ⚠️ ลำดับสำคัญมาก
+**ห้ามเปิด `CUSTOM_DOMAIN` ก่อนเพิ่ม DNS** เพราะ GitHub จะ redirect เว็บเดิมไปโดเมนใหม่ทันที
+ถ้า DNS ยังไม่พร้อม เว็บจะเข้าไม่ได้ทั้งหมดจนกว่า DNS จะมีผล
+
+### URL หลังเปลี่ยนเสร็จ
+| เดิม | ใหม่ |
+|---|---|
+| `phossatron.github.io/Sale-page/` | `international.beyondlab.co.th/` |
+| `phossatron.github.io/Sale-page/admin/` | `international.beyondlab.co.th/admin/` |
+
+URL เดิมจะ redirect มาที่โดเมนใหม่ให้อัตโนมัติ
 
 ---
 

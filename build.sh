@@ -8,11 +8,23 @@
 set -e
 cd "$(dirname "$0")"
 
+# ---- โดเมนของตัวเอง ----
+# โดเมนที่เลือกไว้: international.beyondlab.co.th
+# ⚠️ เปิดใช้ "หลังจาก" เพิ่ม DNS record เรียบร้อยแล้วเท่านั้น
+#    (ถ้าเปิดก่อน เว็บเดิมจะ redirect ไปโดเมนที่ยังไม่มีอยู่ → เข้าไม่ได้ทั้งเว็บ)
+# ปล่อยว่างไว้ = ใช้ URL ของ github.io ตามเดิม
+# ไฟล์ CNAME ต้องถูกสร้างใหม่ทุกครั้งที่ build เพราะ docs/ ถูกลบและสร้างใหม่
+CUSTOM_DOMAIN=""
+
 rm -rf docs
 mkdir -p docs/js docs/css
 cp -R assets docs/
 cp js/content.js js/icons.js js/render.js js/viewer.js docs/js/
 touch docs/.nojekyll
+if [ -n "$CUSTOM_DOMAIN" ]; then
+  echo "$CUSTOM_DOMAIN" > docs/CNAME
+  echo "   โดเมน: $CUSTOM_DOMAIN"
+fi
 
 # --- สำเนาสำหรับผู้ดูแล (มีโหมดแก้ไข) ไว้ที่ /admin ---
 mkdir -p docs/admin
