@@ -226,8 +226,38 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0}
    Safari บน iOS จะซูมเข้าอัตโนมัติถ้า input มีฟอนต์เล็กกว่า 16px แล้วไม่ซูมกลับ
    ทำให้ทั้งหน้าดูสเกลเพี้ยนและล้นขอบ */
 @media (max-width:900px){
-  input,select,textarea,button{font-size:16px}
+  input,select,textarea{font-size:16px}
   .contact-form input,.contact-form select,.contact-form textarea{font-size:16px}
+}
+
+/* ---------- มือถือ: หัวเว็บ ----------
+   เดิมเมนูถูกบีบอยู่ในคอลัมน์แคบข้างโลโก้ แต่ละคำจึงแตกหลายบรรทัด หัวเว็บสูงมาก
+   แก้เป็น: แถวบน = โลโก้ + ปุ่ม CTA, แถวล่าง = เมนูเรียงแนวนอนเต็มความกว้าง (พับเป็น 2 แถว) */
+@media (max-width:900px){
+  .site-header{box-shadow:0 1px 6px rgba(17,24,39,.05)}
+  .hd{
+    height:auto;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    column-gap:12px;row-gap:8px;padding-top:10px;padding-bottom:8px;
+  }
+  .logo{order:1}
+  .logo-img{width:128px !important;height:38px !important}
+  .hd>.btn.primary{order:2;padding:9px 15px;font-size:13px;flex:none}
+  .nav{order:3;flex:0 0 100%;width:100%;margin-top:2px}
+  .nav-list{
+    display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+    gap:4px 14px;                       /* พอดีให้เมนู 7 อันลงตัวใน 2 แถว */
+    border-top:1px solid var(--line);padding-top:8px;
+  }
+  .nav-item{white-space:nowrap}         /* กันคำเดียวถูกหั่นเป็นหลายบรรทัด (ต้นเหตุเดิม) */
+  .nav-item a{font-size:12.5px;line-height:1.9;display:block}
+}
+
+/* จอเล็กมาก (iPhone SE / จอแคบ) ลดลงอีกขั้นเพื่อให้ยังอยู่ใน 2 แถว */
+@media (max-width:400px){
+  .logo-img{width:112px !important;height:34px !important}
+  .hd>.btn.primary{padding:8px 12px;font-size:12px}
+  .nav-list{gap:2px 11px}
+  .nav-item a{font-size:12px}
 }
 
 /* ---------- responsive ---------- */
@@ -254,8 +284,6 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0}
   .nav-list{gap:12px}
   .promo-card{flex-direction:column}
   .promo-media{width:100%}
-  /* โลโก้: กรอบถูกกำหนดเป็น inline style จาก slot จึงต้อง !important */
-  .logo-img{width:142px !important;height:42px !important}
   /* ข้อความบนวิดีโอเดิมใหญ่เกินกรอบบนจอเล็ก */
   .video-txt{font-size:18px;left:16px}
   .play{width:52px;height:52px;right:8%}
