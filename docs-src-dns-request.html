@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8"><title>DNS Request</title>
+<style>
+@page{size:A4;margin:18mm 16mm}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Sukhumvit Set","Noto Sans Thai","Thonburi","Helvetica Neue",sans-serif;
+  font-size:11pt;line-height:1.65;color:#1F2937}
+h1{font-size:19pt;margin:0 0 2mm;color:#111827}
+h2{font-size:13pt;margin:9mm 0 3mm;padding-bottom:2mm;border-bottom:2px solid #F26522;color:#111827}
+h3{font-size:11.5pt;margin:6mm 0 2mm;color:#F26522}
+p{margin:0 0 3mm}
+.head{border-bottom:3px solid #F26522;padding-bottom:4mm;margin-bottom:6mm;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:8mm}
+.brand{font-size:20pt;font-weight:700;letter-spacing:-.3px}
+.brand span{color:#F26522}
+.meta{font-size:9pt;color:#6B7280;text-align:right;line-height:1.5}
+.lead{background:#FFF6F1;border-left:4px solid #F26522;padding:4mm 5mm;margin-bottom:6mm;font-size:10.5pt}
+.lead b{color:#B45309}
+table{width:100%;border-collapse:collapse;margin:3mm 0 4mm;font-size:10.5pt}
+th{background:#F3F4F6;text-align:left;font-weight:600;color:#374151}
+th,td{border:1px solid #D1D5DB;padding:2.6mm 3.5mm;vertical-align:top}
+td.val{font-family:ui-monospace,Menlo,monospace;font-size:10pt;background:#FAFAFA;font-weight:600}
+ul{margin:0 0 3mm;padding-left:5mm}
+li{margin-bottom:1.5mm}
+code{font-family:ui-monospace,Menlo,monospace;font-size:9.8pt;background:#F3F4F6;
+  padding:.4mm 1.4mm;border-radius:2px;border:1px solid #E5E7EB}
+pre{background:#111827;color:#E5E7EB;padding:3.5mm 4mm;border-radius:2mm;font-size:9.5pt;
+  line-height:1.6;overflow:hidden;white-space:pre-wrap;margin:2mm 0 4mm}
+.note{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:2mm;padding:3.5mm 4.5mm;font-size:10pt;margin:4mm 0}
+.note b{color:#166534}
+.qa{margin-bottom:4mm}
+.qa .q{font-weight:600;color:#111827}
+.qa .a{color:#4B5563;font-size:10.5pt}
+.foot{margin-top:8mm;padding-top:3mm;border-top:1px solid #E5E7EB;font-size:9pt;color:#9CA3AF;text-align:center}
+.page-break{page-break-before:always}
+.sign{margin-top:5mm;font-size:10.5pt}
+</style></head><body>
+
+<div class="head">
+  <div><div class="brand">Bey<span>o</span>nd Lab</div>
+    <div style="font-size:9pt;color:#6B7280;letter-spacing:2px">BEYOND LABORATORY (THAILAND) CO., LTD.</div></div>
+  <div class="meta">เอกสารคำขอทางเทคนิค<br>26 สิงหาคม 2569<br>อ้างอิง: DNS-2026-001</div>
+</div>
+
+<h1>คำขอเพิ่ม DNS Record</h1>
+<p style="color:#6B7280;margin-bottom:5mm">โดเมน <b>beyondlab.co.th</b> · จำนวน 1 รายการ</p>
+
+<div class="lead">
+  <b>สรุปสั้น:</b> ขอเพิ่ม CNAME record ชื่อ <code>international</code> ชี้ไปที่ <code>phossatron.github.io</code>
+  เพื่อใช้กับหน้าเว็บ landing page สำหรับลูกค้าต่างประเทศ
+  <b>ไม่กระทบเว็บไซต์หลักและระบบอีเมลของบริษัท</b>
+</div>
+
+<h2>1. รายละเอียด Record ที่ขอเพิ่ม</h2>
+<table>
+  <tr><th style="width:38%">หัวข้อ</th><th>ค่าที่ต้องใส่</th></tr>
+  <tr><td>Type</td><td class="val">CNAME</td></tr>
+  <tr><td>Name / Host</td><td class="val">international</td></tr>
+  <tr><td>Value / Target / Points to</td><td class="val">phossatron.github.io</td></tr>
+  <tr><td>TTL</td><td class="val">Auto (หรือ 3600)</td></tr>
+</table>
+
+<h3>ข้อควรระวังในการกรอก</h3>
+<ul>
+  <li>ค่า Value คือ <code>phossatron.github.io</code> เท่านั้น <b>ไม่ต้องมี</b> <code>https://</code> และ<b>ไม่ต้องมี</b> path ต่อท้าย</li>
+  <li>บางระบบต้องใส่จุดปิดท้ายเป็น <code>phossatron.github.io.</code></li>
+  <li>บางระบบต้องกรอกช่อง Name เป็นชื่อเต็ม <code>international.beyondlab.co.th</code></li>
+</ul>
+
+<div class="note">
+  <b>รายการนี้ไม่กระทบระบบเดิมใด ๆ</b><br>
+  เป็นการเพิ่มซับโดเมนใหม่เท่านั้น ไม่แตะต้อง record ของเว็บไซต์หลัก (beyondlab.co.th / www)
+  และไม่แตะ MX record จึงไม่กระทบระบบอีเมลของบริษัท
+</div>
+
+<h2>2. วัตถุประสงค์</h2>
+<p>บริษัทจัดทำหน้าเว็บ landing page สำหรับลูกค้าต่างประเทศ โดยใช้บริการโฮสต์ของ GitHub Pages
+ซึ่งให้บริการฟรีพร้อมใบรับรอง HTTPS การชี้ซับโดเมนนี้จะทำให้เว็บเปิดได้ที่
+<code>https://international.beyondlab.co.th</code> แทนที่อยู่ชั่วคราวที่ใช้อยู่ปัจจุบัน</p>
+<p>เมื่อดำเนินการเรียบร้อยแล้ว รบกวนแจ้งกลับด้วยครับ จะได้ตรวจสอบและเปิดใช้งาน HTTPS ต่อไป
+โดยปกติ DNS จะมีผลภายใน 5–30 นาที</p>
+<p class="sign">ขอบคุณครับ</p>
+
+<h2>3. วิธีตรวจสอบว่าดำเนินการสำเร็จ</h2>
+<p>ตรวจผ่าน Terminal:</p>
+<pre>dig +short international.beyondlab.co.th</pre>
+<p>ผลลัพธ์ที่ถูกต้อง:</p>
+<pre>phossatron.github.io.
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153</pre>
+<p>หรือตรวจผ่านเว็บ: เปิด <code>https://dnschecker.org</code> แล้วค้นหา
+<code>international.beyondlab.co.th</code> เลือกชนิด CNAME</p>
+
+<div class="page-break"></div>
+
+<h2>4. คำถามที่อาจเกิดขึ้น</h2>
+<div class="qa"><div class="q">ทำไมต้องเป็น CNAME ไม่ใช่ A record?</div>
+<div class="a">สำหรับซับโดเมน GitHub แนะนำให้ใช้ CNAME เพราะ GitHub เปลี่ยน IP ของเซิร์ฟเวอร์ได้ตลอดเวลา
+ถ้าใช้ A record จะต้องคอยตามแก้ IP เอง หากระบบไม่รองรับ CNAME จริง ๆ สามารถใช้ A record 4 รายการ
+ชี้ไปที่ 185.199.108.153, 185.199.109.153, 185.199.110.153 และ 185.199.111.153 แทนได้</div></div>
+
+<div class="qa"><div class="q">ต้องเพิ่ม TXT record เพื่อยืนยันตัวตนหรือไม่?</div>
+<div class="a">ไม่จำเป็นสำหรับการใช้งานลักษณะนี้ แต่หากต้องการความปลอดภัยเพิ่มเติม (ป้องกันผู้อื่นอ้างสิทธิ์ซับโดเมน)
+สามารถขอค่ายืนยันจาก GitHub มาเพิ่มเป็น TXT record ที่ <code>_github-pages-challenge-phossatron</code> ได้</div></div>
+
+<div class="qa"><div class="q">มีค่าใช้จ่ายหรือไม่?</div>
+<div class="a">ไม่มี เป็นการเพิ่ม record ในโดเมนที่บริษัทมีอยู่แล้ว และ GitHub Pages ให้ใช้งานฟรีพร้อม HTTPS</div></div>
+
+<div class="qa"><div class="q">หากต้องการยกเลิกภายหลังทำอย่างไร?</div>
+<div class="a">ลบ CNAME record รายการนี้ออกจากระบบ DNS ซับโดเมนจะหยุดทำงานทันทีโดยไม่กระทบส่วนอื่น</div></div>
+
+<h2>5. English version (for an international provider)</h2>
+<p><b>Subject:</b> Request to add one DNS record for beyondlab.co.th</p>
+<p>We are launching a landing page for our international customers, hosted on GitHub Pages.
+Could you please add the following DNS record to the <b>beyondlab.co.th</b> zone?</p>
+<table>
+  <tr><th style="width:38%">Field</th><th>Value</th></tr>
+  <tr><td>Type</td><td class="val">CNAME</td></tr>
+  <tr><td>Name / Host</td><td class="val">international</td></tr>
+  <tr><td>Value / Target</td><td class="val">phossatron.github.io</td></tr>
+  <tr><td>TTL</td><td class="val">Auto (or 3600)</td></tr>
+</table>
+<ul>
+  <li>The target is <code>phossatron.github.io</code> only — no protocol prefix and no path.</li>
+  <li>Some control panels require a trailing dot: <code>phossatron.github.io.</code></li>
+  <li>Some panels require the fully qualified host: <code>international.beyondlab.co.th</code></li>
+</ul>
+<p>This adds a new subdomain only. It does not modify the records for the main website
+(<code>beyondlab.co.th</code> / <code>www</code>) and does not touch the MX records,
+so company email is unaffected.</p>
+<p>Please confirm once the record is live so we can enable HTTPS on our side. Thank you.</p>
+
+<div class="foot">Beyond Laboratory (Thailand) Co., Ltd. · เอกสารคำขอเพิ่ม DNS Record · หน้า <span class="pg"></span></div>
+
+</body></html>
